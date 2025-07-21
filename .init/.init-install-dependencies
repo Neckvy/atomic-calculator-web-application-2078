@@ -1,0 +1,4 @@
+{
+    "command": "npm install",
+    "working_directory": "/home/kavia/workspace/code-generation/atomic-calculator-web-application-2078/frontend_nextjs_calculator"
+}
