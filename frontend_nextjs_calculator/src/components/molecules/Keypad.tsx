@@ -4,8 +4,13 @@ import Button from "../atoms/Button";
 /**
  * List of calculator keys to render, with meta for accessibility and styling.
  */
+/**
+ * C/AC button will be top-left, similar to calculator conventions.
+ * Responsive grid via Tailwind: 4 columns on all, but padding and gap are responsive.
+ */
 const KEYS: { label: string; aria?: string; variant?: string }[][] = [
   [
+    { label: "C", aria: "clear", variant: "function" }, // clear button
     { label: "7" },
     { label: "8" },
     { label: "9" },
@@ -34,22 +39,43 @@ const KEYS: { label: string; aria?: string; variant?: string }[][] = [
 /**
  * PUBLIC_INTERFACE
  * Renders calculator keypad.
+ * 
+ * Props:
+ * - onKeyPress: Handler for number/operator keys.
+ * - onClear: Handler for the clear/all clear button.
  */
 type KeypadButtonVariant = "primary" | "secondary" | "accent" | "operator" | "function" | undefined;
 
-const Keypad: React.FC<{
+interface KeypadProps {
   onKeyPress: (keyLabel: string) => void;
-}> = ({ onKeyPress }) => (
-  <div className="grid grid-cols-4 gap-1 w-full">
-    {KEYS.flat().map(({ label, aria, variant }, i) => (
-      <Button
-        key={label + i}
-        label={label}
-        ariaLabel={aria || label}
-        variant={variant as KeypadButtonVariant}
-        onClick={() => onKeyPress(label)}
-      />
-    ))}
+  onClear?: () => void;
+}
+
+const Keypad: React.FC<KeypadProps> = ({ onKeyPress, onClear }) => (
+  <div className="grid grid-cols-5 sm:grid-cols-5 gap-1 sm:gap-2 w-full 
+                  px-1 py-2 sm:px-3 sm:py-3
+                  ">
+    {KEYS.flat().map(({ label, aria, variant }, i) =>
+      label === "C" ? (
+        <Button
+          key={label + i}
+          label={label}
+          ariaLabel={aria || label}
+          variant={variant as KeypadButtonVariant}
+          onClick={() => {
+            if (onClear) onClear();
+          }}
+        />
+      ) : (
+        <Button
+          key={label + i}
+          label={label}
+          ariaLabel={aria || label}
+          variant={variant as KeypadButtonVariant}
+          onClick={() => onKeyPress(label)}
+        />
+      )
+    )}
   </div>
 );
 

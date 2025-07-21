@@ -152,10 +152,25 @@ const CalculatorPanel: React.FC = () => {
     return () => window.removeEventListener("keydown", handler);
   }, [keyboardHandler]);
 
+  // Handler for Clear/All Clear button
+  const handleClear = useCallback(() => {
+    setDisplayValue("0");
+    setOperand(null);
+    setPendingOp(null);
+    setMemory("");
+    setOverwrite(false);
+  }, []);
+
+  // Improved responsive classNames for calculator panel with Tailwind
+  // Responsive: width auto on mobile (mx-2), larger on tablet (sm:max-w-md), more-padding on desktop (md:p-8)
   return (
     <div
       ref={panelRef}
-      className="w-full max-w-xs mx-auto p-3 sm:p-6 bg-zinc-950/90 dark:bg-zinc-900 rounded-2xl shadow-xl border border-zinc-800 flex flex-col gap-2 items-stretch"
+      className="w-full max-w-xs sm:max-w-md md:max-w-lg mx-auto p-2 sm:p-6 md:p-8 
+                 bg-zinc-950/90 dark:bg-zinc-900 rounded-2xl shadow-xl border border-zinc-800 
+                 flex flex-col gap-2 items-stretch 
+                 transition-all duration-200
+                 "
       aria-label="Calculator panel"
       tabIndex={0}
     >
@@ -168,7 +183,7 @@ const CalculatorPanel: React.FC = () => {
         onMemoryClear={handleMemoryClear}
         isMemoryActive={memory !== ""}
       />
-      <Keypad onKeyPress={handleKeyPress} />
+      <Keypad onKeyPress={handleKeyPress} onClear={handleClear} />
     </div>
   );
 };
